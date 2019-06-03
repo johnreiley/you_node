@@ -3,9 +3,18 @@ const BufferList = require('bl');
 let urlArray = createUrlArray();
 let dataArray = createEmptyDataArray();
 
-getLearnYouNodeData();
+getLearnYouNodeData(urlArray, getLearnYouNodeDataCallback);
 
-function getLearnYouNodeData() {
+function getLearnYouNodeDataCallback(err, dataArray) {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    dataArray.forEach(d => console.log(d));
+}
+
+
+function getLearnYouNodeData(urlArray, callback) {
     urlArray.forEach((url, i) => {
         http.get(url, (response) => {
             response.setEncoding("utf8");
@@ -16,11 +25,12 @@ function getLearnYouNodeData() {
             response.on('end', () => {
                 dataArray[i] = data;
                 if (!dataArray.includes("")) {
-                    dataArray.forEach(d => console.log(d));
+                    callback(null, dataArray);
                 }
             });
         }).on('error', (e) => {
-            throw e;
+            callback(e)
+            return;
         })
     });
 }
@@ -40,5 +50,3 @@ function createEmptyDataArray() {
     }
     return dataArray;
 }
-
-
