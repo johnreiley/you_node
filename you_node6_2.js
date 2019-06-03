@@ -1,9 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
 module.exports = function (dir, ext, callback) {
-    const fs = require('fs');
-    const path = require('path');
-    fs.readdir(dir, (err, files) => {
+    fs.readdir(dir, (err, filenames) => {
         if (err) return callback(err);
-        callback(null, files.filter(f =>
-            path.extname(f) === ("." + ext)))
+        filenames = filenames.filter(f => path.extname(f) === ("." + ext))
+        callback(null, filenames);
     })
 }

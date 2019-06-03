@@ -1,21 +1,24 @@
 let fs = require('fs');
-let numLines = 0;
-let filePath = process.argv[2];
+const filePath = process.argv[2];
 // console.log(filePath);
 
-function countNewLines(callback) {
+function countNewLines(filePath, callback) {
     fs.readFile(filePath, (err, fileBuffer) => {
         if (err) throw err
         // console.log(fileBuffer);
         let fileString = fileBuffer.toString();
         // console.log(fileString);
-        numLines = (fileString.split('\n').length - 1);
-        callback();
+        let numLines = (fileString.split('\n').length - 1);
+        callback(null, numLines);
     });
 }
 
-function logNumLines() {
+function logNumLines(err, numLines) {
+    if (err) {
+        console.error(err);
+        return;
+    }
     console.log(numLines);
 }
 
-countNewLines(logNumLines);
+countNewLines(filePath, logNumLines);
