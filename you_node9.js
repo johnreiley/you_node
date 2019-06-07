@@ -44,9 +44,9 @@ function createUrlArray() {
 }
 
 function createEmptyDataArray() {
-    let dataArray = [];
+    let results = [];
     for (let i = 2; i < process.argv.length; i++) {
-        dataArray.push("");
+        results.push("");
     }
-    return dataArray;
+    return results;
 }
