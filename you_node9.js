@@ -1,18 +1,17 @@
 const http = require('http');
 const BufferList = require('bl');
-let urlArray = createUrlArray();
-let dataArray = createEmptyDataArray();
+let urls = process.argv.slice(2);
+let results = urls.map(() => "");
 
-getLearnYouNodeData(urlArray, getLearnYouNodeDataCallback);
+getLearnYouNodeData(urls, getLearnYouNodeDataCallback);
 
-function getLearnYouNodeDataCallback(err, dataArray) {
+function getLearnYouNodeDataCallback(err, results) {
     if (err) {
         console.error(err);
         return;
     }
-    dataArray.forEach(d => console.log(d));
+    results.forEach(r => console.log(r));
 }
-
 
 function getLearnYouNodeData(urlArray, callback) {
     urlArray.forEach((url, i) => {
@@ -23,9 +22,9 @@ function getLearnYouNodeData(urlArray, callback) {
                 data += chunk;
             });
             response.on('end', () => {
-                dataArray[i] = data;
-                if (!dataArray.includes("")) {
-                    callback(null, dataArray);
+                results[i] = data;
+                if (!results.includes("")) {
+                    callback(null, results);
                 }
             });
         }).on('error', (e) => {
@@ -33,20 +32,4 @@ function getLearnYouNodeData(urlArray, callback) {
             return;
         })
     });
-}
-
-function createUrlArray() {
-    let urlArray = []
-    for (let i = 2; i < process.argv.length; i++) {
-        urlArray.push(process.argv[i]);
-    }
-    return urlArray;
-}
-
-function createEmptyDataArray() {
-    let results = [];
-    for (let i = 2; i < process.argv.length; i++) {
-        results.push("");
-    }
-    return results;
 }
